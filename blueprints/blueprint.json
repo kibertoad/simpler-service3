@@ -1,0 +1,43 @@
+{
+  "type": "service",
+  "name": "simple-hono-app",
+  "summary": "A minimal Hono-based web service exposing a greeting, health check, and user lookup endpoints on Node.js.",
+  "references": [
+    "package.json",
+    "tsconfig.json",
+    "README.md",
+    "src/index.ts"
+  ],
+  "modules": [
+    {
+      "name": "greeting",
+      "summary": "Root greeting capability that returns a welcome message.",
+      "references": [
+        "src/index.ts"
+      ]
+    },
+    {
+      "name": "health",
+      "summary": "Liveness/readiness health check capability.",
+      "references": [
+        "src/index.ts"
+      ]
+    },
+    {
+      "name": "users",
+      "summary": "User identity lookup capability returning a user representation by id.",
+      "references": [
+        "src/index.ts"
+      ]
+    },
+    {
+      "name": "infrastructure",
+      "summary": "Cross-cutting technical plumbing: HTTP server bootstrapping, port configuration, TypeScript tooling, and dependency management.",
+      "references": [
+        "package.json",
+        "tsconfig.json",
+        "src/index.ts"
+      ]
+    }
+  ]
+}
