@@ -1,0 +1,42 @@
+# Simple Hono App
+
+A minimal web application built with [Hono](https://hono.dev/) running on the Node.js runtime.
+
+## Getting Started
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run in development (hot reload)
+
+```bash
+npm run dev
+```
+
+### Build and run in production
+
+```bash
+npm run build
+npm start
+```
+
+### Typecheck
+
+```bash
+npm run typecheck
+```
+
+## Endpoints
+
+| Method | Path         | Description                |
+| ------ | ------------ | -------------------------- |
+| GET    | `/`          | Returns a greeting message |
+| GET    | `/health`    | Health check               |
+| GET    | `/users/:id` | Returns a user by id       |
+
+## Configuration
+
+The server port can be set via the `PORT` environment variable (defaults to `3000`).
