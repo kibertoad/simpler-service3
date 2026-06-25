@@ -1,0 +1,188 @@
+{
+  "name": "Observability",
+  "summary": "OpenTelemetry tracing instrumentation for HTTP requests and export to Datadog.",
+  "requirements": [
+    {
+      "id": "INF-OBS-001",
+      "title": "Automatic request trace spans",
+      "statement": "The system SHALL automatically create an OpenTelemetry trace span for every incoming HTTP request handled by the Hono service.",
+      "kind": "functional",
+      "priority": "must",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ],
+      "acceptance": [
+        {
+          "id": "INF-OBS-001-A1",
+          "given": "the Hono service is running with OpenTelemetry enabled",
+          "when": "an HTTP request is received",
+          "outcome": "a root span is created for that request"
+        },
+        {
+          "id": "INF-OBS-001-A2",
+          "given": "a request span exists",
+          "when": "the request completes",
+          "outcome": "the span is ended and exported"
+        }
+      ]
+    },
+    {
+      "id": "INF-OBS-002",
+      "title": "Export trace data to Datadog",
+      "statement": "The system SHALL export generated trace data to Datadog.",
+      "kind": "functional",
+      "priority": "must",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ],
+      "acceptance": [
+        {
+          "id": "INF-OBS-002-A1",
+          "given": "the service is configured with a valid Datadog endpoint or Datadog Agent",
+          "when": "trace spans are produced",
+          "outcome": "the spans are delivered to Datadog"
+        },
+        {
+          "id": "INF-OBS-002-A2",
+          "given": "the Datadog exporter is unreachable",
+          "when": "an export attempt fails",
+          "outcome": "the service continues to handle requests without crashing"
+        }
+      ]
+    },
+    {
+      "id": "INF-OBS-003",
+      "title": "HTTP semantic attributes on request spans",
+      "statement": "The system SHALL include standard HTTP semantic attributes on each request span, such as HTTP method, route, and status code.",
+      "kind": "functional",
+      "priority": "should",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ],
+      "acceptance": [
+        {
+          "id": "INF-OBS-003-A1",
+          "given": "a request span is created",
+          "when": "the request is processed",
+          "outcome": "the span contains the attributes `http.method`, `http.route`, and `http.status_code`"
+        }
+      ]
+    },
+    {
+      "id": "INF-OBS-004",
+      "title": "Trace context propagation",
+      "statement": "The system SHALL propagate OpenTelemetry trace context across inbound and outbound HTTP calls.",
+      "kind": "functional",
+      "priority": "should",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ],
+      "acceptance": [
+        {
+          "id": "INF-OBS-004-A1",
+          "given": "an inbound request contains a valid `traceparent` header",
+          "when": "the Hono service processes the request",
+          "outcome": "the existing trace context is continued rather than a new trace being started"
+        },
+        {
+          "id": "INF-OBS-004-A2",
+          "given": "the service makes an outbound HTTP call",
+          "when": "the call is initiated",
+          "outcome": "OpenTelemetry propagation headers are included"
+        }
+      ]
+    },
+    {
+      "id": "INF-OBS-005",
+      "title": "Environment-variable configuration for OpenTelemetry and Datadog",
+      "statement": "The system SHALL allow OpenTelemetry and Datadog export settings to be configured via environment variables.",
+      "kind": "functional",
+      "priority": "should",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ],
+      "acceptance": [
+        {
+          "id": "INF-OBS-005-A1",
+          "given": "the service is starting and environment variables for OpenTelemetry and Datadog export are set",
+          "when": "the service initialises its telemetry stack",
+          "outcome": "the service applies those values without requiring code changes"
+        },
+        {
+          "id": "INF-OBS-005-A2",
+          "given": "the service is starting and no deployment-specific environment variables are set",
+          "when": "the service initialises its telemetry stack",
+          "outcome": "the service starts using sensible defaults"
+        }
+      ]
+    },
+    {
+      "id": "INF-OBS-006",
+      "title": "Negligible request latency from instrumentation",
+      "statement": "The system SHALL add negligible latency to request processing under normal load.",
+      "kind": "functional",
+      "priority": "must",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ],
+      "acceptance": [
+        {
+          "id": "INF-OBS-006-A1",
+          "given": "the service is running under normal load with OpenTelemetry enabled",
+          "when": "requests are processed",
+          "outcome": "the additional latency per request remains negligible compared to the baseline without instrumentation"
+        }
+      ]
+    },
+    {
+      "id": "INF-OBS-007",
+      "title": "No sensitive data in telemetry",
+      "statement": "The system SHALL not include sensitive data such as passwords, tokens, or PII in span attributes or logs.",
+      "kind": "functional",
+      "priority": "must",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ],
+      "acceptance": [
+        {
+          "id": "INF-OBS-007-A1",
+          "given": "a request contains an `Authorization` header, password field, or token",
+          "when": "the corresponding span is created and exported",
+          "outcome": "the span attributes and logs do not contain the sensitive value"
+        },
+        {
+          "id": "INF-OBS-007-A2",
+          "given": "a request contains PII in its path, query, or body",
+          "when": "the corresponding span is created and exported",
+          "outcome": "the span attributes and logs do not contain the PII"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "INF-OBS-R001",
+      "rule": "Instrumentation must integrate with Hono's request lifecycle and middleware model.",
+      "rationale": "The service is built on the Hono framework; OpenTelemetry instrumentation must participate naturally in Hono middleware and request handling.",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ]
+    },
+    {
+      "id": "INF-OBS-R002",
+      "rule": "Trace export must target Datadog through a Datadog-compatible exporter or the Datadog Agent's OTLP intake.",
+      "rationale": "Datadog is the required telemetry backend, so the exporter or intake path must be compatible with Datadog.",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ]
+    },
+    {
+      "id": "INF-OBS-R003",
+      "rule": "Trace context propagation must follow the W3C Trace Context standard.",
+      "rationale": "Standardised propagation ensures interoperability with other OpenTelemetry-instrumented callers and downstream services.",
+      "sourceBlockIds": [
+        "task_e71229fed381"
+      ]
+    }
+  ]
+}

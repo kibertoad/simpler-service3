@@ -1,0 +1,4 @@
+{
+  "name": "infrastructure",
+  "summary": "Cross-cutting technical plumbing including HTTP server bootstrapping, port configuration, TypeScript tooling, dependency management, and observability instrumentation."
+}
