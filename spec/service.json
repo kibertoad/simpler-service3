@@ -1,0 +1,4 @@
+{
+  "service": "simple-hono-app",
+  "summary": "A minimal Hono-based web service exposing greeting, health, and user lookup endpoints with OpenTelemetry trace export to Datadog."
+}
