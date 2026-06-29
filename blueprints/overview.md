@@ -20,6 +20,10 @@ Liveness/readiness health check capability.
 
 User identity lookup capability returning a user representation by id.
 
+### [kenguroos](modules/kenguroos.md)
+
+In-memory CRUD capability for kenguroos (id, name, age).
+
 ### [infrastructure](modules/infrastructure.md)
 
 Cross-cutting technical plumbing: HTTP server bootstrapping, port configuration, TypeScript tooling, and dependency management.

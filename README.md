@@ -33,9 +33,14 @@ npm run typecheck
 
 | Method | Path         | Description                |
 | ------ | ------------ | -------------------------- |
-| GET    | `/`          | Returns a greeting message |
-| GET    | `/health`    | Health check               |
-| GET    | `/users/:id` | Returns a user by id       |
+| GET    | `/`              | Returns a greeting message        |
+| GET    | `/health`        | Health check                      |
+| GET    | `/users/:id`     | Returns a user by id              |
+| GET    | `/kenguroos`     | List all kenguroos                |
+| POST   | `/kenguroos`     | Create a kenguroo (`name`, `age`) |
+| GET    | `/kenguroos/:id` | Get a kenguroo by id              |
+| PUT    | `/kenguroos/:id` | Update a kenguroo                 |
+| DELETE | `/kenguroos/:id` | Delete a kenguroo                 |
 
 ## Configuration
 
