@@ -57,9 +57,17 @@ function parseName(value: unknown): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
+/** Largest accepted age. A sane upper bound for an in-memory demo entity. */
+const MAX_AGE = 100;
+
 /** Validate an incoming age field. Returns null when invalid. */
 function parseAge(value: unknown): number | null {
-  if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+  if (
+    typeof value !== "number" ||
+    !Number.isInteger(value) ||
+    value < 0 ||
+    value > MAX_AGE
+  ) {
     return null;
   }
   return value;
@@ -87,7 +95,10 @@ kenguroos.post("/", async (c) => {
     return c.json({ error: "name is required and must be a non-empty string" }, 400);
   }
   if (age === null) {
-    return c.json({ error: "age is required and must be a non-negative integer" }, 400);
+    return c.json(
+      { error: `age is required and must be an integer between 0 and ${MAX_AGE}` },
+      400,
+    );
   }
 
   const kenguroo = store.create({ name, age });
@@ -114,7 +125,10 @@ kenguroos.put("/:id", async (c) => {
   if (raw.age !== undefined) {
     const age = parseAge(raw.age);
     if (age === null) {
-      return c.json({ error: "age must be a non-negative integer" }, 400);
+      return c.json(
+        { error: `age must be an integer between 0 and ${MAX_AGE}` },
+        400,
+      );
     }
     data.age = age;
   }
@@ -129,3 +143,14 @@ kenguroos.delete("/:id", (c) => {
   if (!deleted) return c.json({ error: "Kenguroo not found" }, 404);
   return c.body(null, 204);
 });
+
+/** Reject unsupported methods with 405 + Allow, rather than a misleading 404. */
+function methodNotAllowed(allow: string) {
+  return (c: import("hono").Context) => {
+    c.header("Allow", allow);
+    return c.json({ error: "Method Not Allowed" }, 405);
+  };
+}
+
+kenguroos.all("/", methodNotAllowed("GET, POST"));
+kenguroos.all("/:id", methodNotAllowed("GET, PUT, DELETE"));
