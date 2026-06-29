@@ -1,7 +1,6 @@
 # kenguroos
 
-In-memory CRUD capability for kenguroos. A kenguroo has an `id`, `name`, and `age`.
-Data is held in memory and is not persisted across restarts.
+In-memory CRUD capability for kenguroos (a domain entity with id, name, and age), including list, get, create, update, and delete with input validation. Data is not persisted across restarts.
 
 
 **Code references:**

@@ -1,7 +1,7 @@
 {
   "type": "service",
   "name": "simple-hono-app",
-  "summary": "A minimal Hono-based web service exposing a greeting, health check, and user lookup endpoints on Node.js.",
+  "summary": "A minimal Hono-based web service on Node.js exposing a greeting endpoint, a health check, user lookup, and an in-memory CRUD for kenguroos.",
   "references": [
     "package.json",
     "tsconfig.json",
@@ -13,6 +13,14 @@
       "name": "greeting",
       "summary": "Root greeting capability that returns a welcome message.",
       "references": [
+        "src/index.ts"
+      ]
+    },
+    {
+      "name": "kenguroos",
+      "summary": "In-memory CRUD capability for kenguroos (a domain entity with id, name, and age), including list, get, create, update, and delete with input validation. Data is not persisted across restarts.",
+      "references": [
+        "src/kenguroos.ts",
         "src/index.ts"
       ]
     },
@@ -32,7 +40,7 @@
     },
     {
       "name": "infrastructure",
-      "summary": "Cross-cutting technical plumbing: HTTP server bootstrapping, port configuration, TypeScript tooling, and dependency management.",
+      "summary": "Cross-cutting technical plumbing: HTTP server bootstrapping, port configuration, route wiring, TypeScript tooling, and dependency management.",
       "references": [
         "package.json",
         "tsconfig.json",
