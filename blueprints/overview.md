@@ -16,6 +16,10 @@ Root greeting capability that returns a welcome message.
 
 In-memory CRUD capability for kenguroos (a domain entity with id, name, and age), including list, get, create, update, and delete with input validation. Data is not persisted across restarts.
 
+### [grass](modules/grass.md)
+
+In-memory CRUD capability for grass (a domain entity with id, name, and height), including list, get, create, update, and delete with input validation. Data is not persisted across restarts.
+
 ### [health](modules/health.md)
 
 Liveness/readiness health check capability.
