@@ -1,6 +1,6 @@
 # health
 
-Liveness/readiness health check capability.
+Liveness/readiness health check capability returning a simple status payload.
 
 
 **Code references:**
