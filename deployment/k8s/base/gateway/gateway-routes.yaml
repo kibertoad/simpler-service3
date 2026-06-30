@@ -1,0 +1,53 @@
+# Authenticated API requests — a Bearer token is present. The header match makes
+# this more specific than simpler-service3-public, so it takes precedence for the
+# same paths when an Authorization header is present.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: simpler-service3-authenticated
+  labels:
+    simpler-service3-rate-limit: authenticated
+spec:
+  parentRefs:
+    - name: simpler-service3
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /kenguroos
+          headers:
+            - name: Authorization
+              type: RegularExpression
+              value: "^Bearer .+"
+        - path:
+            type: PathPrefix
+            value: /users
+          headers:
+            - name: Authorization
+              type: RegularExpression
+              value: "^Bearer .+"
+      backendRefs:
+        - name: app
+          port: 80
+---
+# Unauthenticated fallback for the API paths.
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: simpler-service3-public
+  labels:
+    simpler-service3-rate-limit: unauthenticated
+spec:
+  parentRefs:
+    - name: simpler-service3
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /kenguroos
+        - path:
+            type: PathPrefix
+            value: /users
+      backendRefs:
+        - name: app
+          port: 80

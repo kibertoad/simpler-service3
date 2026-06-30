@@ -1,0 +1,13 @@
+# Trust one upstream proxy hop (AWS ALB) so XFF is used for rate limiting.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: simpler-service3-xff
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: simpler-service3
+  clientIPDetection:
+    xForwardedFor:
+      numTrustedHops: 1

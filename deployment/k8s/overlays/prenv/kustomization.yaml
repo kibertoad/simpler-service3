@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: simpler-service3-prenv
+
+resources:
+  - ../../base
+
+components:
+  - simpler-service3
+
+generatorOptions:
+  disableNameSuffixHash: true

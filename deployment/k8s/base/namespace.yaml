@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: simpler-service3-prenv
+  labels:
+    app.kubernetes.io/part-of: simpler-service3
+    app.kubernetes.io/managed-by: kustomize

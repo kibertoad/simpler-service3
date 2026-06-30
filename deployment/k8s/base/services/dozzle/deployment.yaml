@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dozzle
+  labels:
+    app.kubernetes.io/name: dozzle
+    app.kubernetes.io/component: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dozzle
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: dozzle
+        app.kubernetes.io/component: observability
+    spec:
+      serviceAccountName: dozzle
+      containers:
+        - name: dozzle
+          image: 053497547689.dkr.ecr.eu-central-1.amazonaws.com/dockerhub/amir20/dozzle:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: DOZZLE_MODE
+              value: k8s
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL

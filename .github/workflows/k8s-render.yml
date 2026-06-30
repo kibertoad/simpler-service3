@@ -1,0 +1,24 @@
+name: k8s-render
+
+# Validates that the kustomize overlay renders cleanly, using the checked-in
+# .env.example placeholders (no Vault drop needed). Catches broken manifests
+# before they reach the prenv deploy.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  k8s-render:
+    name: Validate k8s overlay
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Render prenv overlay
+        run: bash deployment/scripts/static-render.sh

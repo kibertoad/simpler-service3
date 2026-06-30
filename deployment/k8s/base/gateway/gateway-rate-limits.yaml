@@ -1,0 +1,65 @@
+# Authenticated rate limit: 30 req/min per source IP.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: simpler-service3-auth-rate-limit
+spec:
+  targetSelectors:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      matchLabels:
+        simpler-service3-rate-limit: authenticated
+  rateLimit:
+    type: Global
+    global:
+      rules:
+        - clientSelectors:
+            - sourceCIDR:
+                value: 0.0.0.0/0
+                type: Distinct
+          limit:
+            requests: 30
+            unit: Minute
+  responseOverride:
+    - match:
+        statusCodes:
+          - type: Value
+            value: 429
+      response:
+        contentType: application/json
+        body:
+          type: Inline
+          inline: '{"error":{"message":"Too many requests. Cool your jets and try again in a bit.","code":429}}'
+---
+# Unauthenticated rate limit: 10 req/min per source IP.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: simpler-service3-noauth-rate-limit
+spec:
+  targetSelectors:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      matchLabels:
+        simpler-service3-rate-limit: unauthenticated
+  rateLimit:
+    type: Global
+    global:
+      rules:
+        - clientSelectors:
+            - sourceCIDR:
+                value: 0.0.0.0/0
+                type: Distinct
+          limit:
+            requests: 10
+            unit: Minute
+  responseOverride:
+    - match:
+        statusCodes:
+          - type: Value
+            value: 429
+      response:
+        contentType: application/json
+        body:
+          type: Inline
+          inline: '{"error":{"message":"Too many requests. Cool your jets and try again in a bit.","code":429}}'
