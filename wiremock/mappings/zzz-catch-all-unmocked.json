@@ -1,0 +1,16 @@
+{
+  "priority": 99,
+  "request": {
+    "urlPattern": ".*"
+  },
+  "response": {
+    "status": 501,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "error": "UNMOCKED_EXTERNAL_CALL",
+      "message": "No WireMock stub matched this request. An external dependency is being called that is not mocked yet. Add a mapping under wiremock/mappings/ (and a response fixture under wiremock/__files/ if needed) for this operation."
+    }
+  }
+}
